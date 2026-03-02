@@ -89,26 +89,11 @@ def inject_css():
             padding-bottom: 2rem !important;
         }
                 
-        # /* Hide the top header (including 'Deploy', hamburger menu, and 'Running' icon) */
-        # .stAppHeader {visibility: hidden;}
+        /* Hide the top header (including 'Deploy', hamburger menu, and 'Running' icon) */
+        .stAppHeader {visibility: hidden;}
 
-        # /* Hide the 'Made with Streamlit' footer */
-        # footer {visibility: hidden;}
-
-        /* ── Hide Streamlit Branding & Reclaim Space ──────── */
-        /* Hide the top-right menu tools, hamburger menu, and footer */
-        [data-testid="stToolbar"], 
-        #MainMenu, 
-        footer {
-            display: none !important;
-        }
-        
-        /* Make the header transparent so the sidebar toggle button survives */
-        header[data-testid="stHeader"], 
-        .stAppHeader {
-            background-color: transparent !important;
-            visibility: visible !important; /* Forces the button to stay visible */
-        }
+        /* Hide the 'Made with Streamlit' footer */
+        footer {visibility: hidden;}
 
         /* --- Sidebar Width --- */
         /* Updated selector and fixed braces (single { } instead of {{ }}) */
