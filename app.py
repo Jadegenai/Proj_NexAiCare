@@ -110,7 +110,7 @@ def inject_css():
         }
         
         [data-testid="stSidebarUserContent"] {
-            padding-top: 0rem !important; /* Pulls your logo flush to the top */
+            padding-top: 1rem !important; /* Pulls your logo flush to the top */
         }
 
         section[data-testid="stSidebar"] * {color: rgba(255,255,255,0.85) !important;}
