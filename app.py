@@ -170,7 +170,7 @@ def inject_css():
         .page-header {
             background: linear-gradient(135deg, #0A1628, #1B3A5C);
             color: #fff; 
-            padding: 28px 32px; 
+            padding: 5px 5px; 
             border-radius: 14px;
             margin-bottom: 24px;
             text-align: center;
