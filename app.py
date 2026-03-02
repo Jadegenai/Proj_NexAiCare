@@ -110,7 +110,7 @@ def inject_css():
         }
         
         [data-testid="stSidebarUserContent"] {
-            padding-top: 2rem !important; /* Pulls your logo flush to the top */
+            padding-top: 4rem !important; /* Pulls your logo flush to the top */
         }
 
         section[data-testid="stSidebar"] * {color: rgba(255,255,255,0.85) !important;}
@@ -175,7 +175,7 @@ def inject_css():
             margin-bottom: 24px;
             text-align: center;
         }
-        .page-header h2 {color: #fff !important; margin:0 0 6px 0; font-size:34px;}
+        .page-header h2 {color: #fff !important; margin:0 0 6px 0; font-size:42px;}
         .page-header p  {color: rgba(255,255,255,0.75); margin:0; font-size:16px;}
 
         /* ── Chat Messages ────────────────────────────────── */
