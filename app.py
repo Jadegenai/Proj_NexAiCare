@@ -187,10 +187,10 @@ def inject_css():
             transition: all .2s;
         }
         div.stButton > button:first-child {
-            background-color: #FF6B35; color: white; border: none;
+            background-color: #001775; color: white; border: none;
         }
         div.stButton > button:first-child:hover {
-            background-color: #e85d2c; color: white;
+            background-color: #002AD1; color: white;
         }
 
         /* ── Coming‑soon Banner ───────────────────────────── */
