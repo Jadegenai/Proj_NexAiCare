@@ -83,17 +83,17 @@ def inject_css():
         /* ── Global ───────────────────────────────────────── */
         h1, h2, h3 {color: #0A1628;}
         
-        # /* 1. REMOVE TOP BLANK SPACE */
-        # .block-container {
-        #     padding-top: 0rem !important; /* Reduces top padding significantly */
-        #     padding-bottom: 2rem !important;
-        # }
+        /* 1. REMOVE TOP BLANK SPACE */
+        .block-container {
+            padding-top: 0rem !important; /* Reduces top padding significantly */
+            padding-bottom: 2rem !important;
+        }
                 
-        # /* Hide the top header (including 'Deploy', hamburger menu, and 'Running' icon) */
-        # .stAppHeader {visibility: hidden;}
+        /* Hide the top header (including 'Deploy', hamburger menu, and 'Running' icon) */
+        .stAppHeader {visibility: hidden;}
 
-        # /* Hide the 'Made with Streamlit' footer */
-        # footer {visibility: hidden;}
+        /* Hide the 'Made with Streamlit' footer */
+        footer {visibility: hidden;}
 
         /* --- Sidebar Width --- */
         /* Updated selector and fixed braces (single { } instead of {{ }}) */
