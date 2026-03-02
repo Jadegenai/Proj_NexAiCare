@@ -15,4 +15,4 @@ gatherUsageStats = false
 [theme.sidebar]
 
 [client]
-showSidebarNavigation=True
+showSidebarNavigation=true
