@@ -1,0 +1,24 @@
+
+Prompt 1:
+---------
+
+You are the Senior AI Application Developer of an IT Company. Go over the following code files from my GIT Repo to understand what it is doing. Don't need to generate anything now. Just learn. Once you learn then I will take your help to generate codes.
+
+Module 1: Medical Assistant AI	
+
+	Code:	Healthcare_Audit_Chatbot_Solution_Notebook
+	Training Data:	"hc_Data" Data Base File
+
+Module 1: Claim Audit AI	
+
+	Code:	Healthcare_AI_Specialist
+	Training Data:	"medical_diagnosis_manual.pdf"
+
+Module 1: Consultation Notes AI	
+
+	Code:	Doctor_Interaction_Summary
+	Training Data:	"finetuning_medical_testing.csv"
+
+Learn the application page layout and design in terms of icons, logo, sidebar, logout option, data table representation, KPI showcase, status color format, etc. from the picture (Streamlit_Page_Layout.JPEG)
+
+	
