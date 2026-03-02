@@ -172,7 +172,7 @@ def inject_css():
             color: #fff; 
             padding: 5px 5px; 
             border-radius: 14px;
-            margin-bottom: 24px;
+            margin-bottom: 5px;
             text-align: center;
         }
         .page-header h2 {color: #fff !important; margin:0 0 6px 0; font-size:42px;}
