@@ -83,9 +83,9 @@ def inject_css():
         /* ── Global ───────────────────────────────────────── */
         h1, h2, h3 {color: #0A1628;}
         
-        /* 1. REMOVE TOP BLANK SPACE */
+        /* REMOVE TOP BLANK SPACE */
         .block-container {
-            padding-top: 0rem !important; /* Reduces top padding significantly */
+            padding-top: 0rem !important;
             padding-bottom: 2rem !important;
         }
                 
@@ -95,17 +95,24 @@ def inject_css():
         /* Hide the 'Made with Streamlit' footer */
         footer {visibility: hidden;}
 
+        /* ── Sidebar ──────────────────────────────────────── */
         /* --- Sidebar Width --- */
-        /* Updated selector and fixed braces (single { } instead of {{ }}) */
         section[data-testid="stSidebar"] {
             min-width: 280px !important;
             max-width: 280px !important;
-        }
-
-        /* ── Sidebar ──────────────────────────────────────── */
-        section[data-testid="stSidebar"] {
             background: linear-gradient(180deg, #0A1628 0%, #142d4c 100%);
         }
+
+        /* HIDE SIDEBAR BUTTON & REMOVE SIDEBAR TOP WHITESPACE */
+        [data-testid="collapsedControl"], 
+        [data-testid="stSidebarHeader"] {
+            display: none !important; /* Kills the open/close buttons and the 60px header gap */
+        }
+        
+        [data-testid="stSidebarUserContent"] {
+            padding-top: 0rem !important; /* Pulls your logo flush to the top */
+        }
+
         section[data-testid="stSidebar"] * {color: rgba(255,255,255,0.85) !important;}
         section[data-testid="stSidebar"] hr {border-color: rgba(255,255,255,0.15);}
         section[data-testid="stSidebar"] .stRadio > div > label {
