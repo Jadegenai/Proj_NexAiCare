@@ -90,14 +90,10 @@ def inject_css():
         }
                 
         /* Hide the top header (including 'Deploy', hamburger menu, and 'Running' icon) */
-        .stAppHeader {
-            visibility: hidden;
-        }
+        #.stAppHeader {visibility: hidden;}
 
         /* Hide the 'Made with Streamlit' footer */
-        footer {
-            visibility: hidden;
-        }
+        footer {visibility: hidden;}
 
         /* --- Sidebar Width --- */
         /* Updated selector and fixed braces (single { } instead of {{ }}) */
