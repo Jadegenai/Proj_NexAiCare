@@ -94,7 +94,7 @@ def inject_css():
             display: block;
             margin-left: auto;
             margin-right: auto;
-            width: 50%;
+            width: 60%;
             margin-bottom: 10px;
         }
 
