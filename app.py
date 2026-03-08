@@ -647,7 +647,7 @@ def render_module_3():
 # ═══════════════════════════════════════════════════════════════════════════
 def render_dashboard():
     render_page_header(
-        "📊",
+        "🏥",
         "Healthcare Operations Dashboard",
         "Real-time analytics and AI-powered insights across claims, compliance, and clinical operations.",
     )
