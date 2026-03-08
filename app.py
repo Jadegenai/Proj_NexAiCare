@@ -1,9 +1,9 @@
 """
 ╔══════════════════════════════════════════════════════════════════════════╗
-║  NexAiCare - AI-Powered Healthcare Platform                            ║
-║  Developed by Jade Global                                              ║
-║  Six Integrated AI Modules in One Unified Application                  ║
-║  Version: 1.0.0                                                        ║
+║  NexAiCare - AI-Powered Healthcare Platform                              ║
+║  Developed by Jade Global                                                ║
+║  Six Integrated AI Modules in One Unified Application                    ║
+║  Version: 1.0.0                                                          ║
 ╚══════════════════════════════════════════════════════════════════════════╝
 """
 
@@ -23,6 +23,9 @@ import time
 import base64
 import warnings
 from PIL import Image
+
+from streamlit_extras.stylable_container import stylable_container
+from streamlit_option_menu import option_menu
 
 from openai import OpenAI
 
@@ -56,106 +59,77 @@ DB_PATH = str(BASE_DIR / "hc_data.db")
 PDF_PATH = str(BASE_DIR / "medical_diagnosis_manual.pdf")
 CSV_PATH = str(BASE_DIR / "finetuning_medical_testing.csv")
 VECTOR_DB_DIR = str(BASE_DIR / "Healthcare_db")
-# LOGO_DARK_PATH = "logo"/"JadeGlobal_BW.PNG"
-# LOGO_LIGHT_PATH = "logo"/"jadeglobal.png"
 
 MENU_ITEMS = {
-    "📊 Dashboard": "dashboard",
-    "🩺 Medical Assistant AI": "module_1",
-    "🔍 Claim Audit AI": "module_2",
-    "📝 Consultation Notes AI": "module_3",
-    "🛡️ PII/PHI Monitor": "module_4",
-    "💻 Medical Coding AI": "module_5",
-    "🔬 Clinical Diagnostic AI": "module_6",
-    "⚙️ Settings": "settings",
+    "Dashboard": "dashboard",
+    "Medical Assistant AI": "module_1",
+    "Claim Audit AI": "module_2",
+    "Consultation Notes AI": "module_3",
+    "PII/PHI Monitor": "module_4",
+    "Medical Coding AI": "module_5",
+    "Clinical Diagnostic AI": "module_6",
+    "Settings": "settings",
 }
 
-STATUS_COLORS = {"Paid": "#82CA9D", "Denied": "#E87A7A", "Pending": "#F4CA64"}
+STATUS_COLORS = {"Paid": "#175388", "Denied": "#ecb713", "Pending": "#2A7B9B"}
 
 
 # ═══════════════════════════════════════════════════════════════════════════
 # CUSTOM CSS
 # ═══════════════════════════════════════════════════════════════════════════
 def inject_css():
-    st.markdown(
-        """
+    CUSTOM_CSS = """
     <style>
-        /* ── Global ───────────────────────────────────────── */
-        h1, h2, h3 {color: #0A1628;}
-        
-        /* REMOVE TOP BLANK SPACE */
+        /* Global Styles */
         .block-container {
-            padding-top: 0rem !important;
+            padding-top: 1.5rem !important;
             padding-bottom: 2rem !important;
         }
-                
-        /* Hide the top header (including 'Deploy', hamburger menu, and 'Running' icon) */
-        .stAppHeader {visibility: hidden;}
+        .stAppHeader { visibility: hidden; }
+        footer { visibility: hidden; }
 
-        /* Hide the 'Made with Streamlit' footer */
-        footer {visibility: hidden;}
-
-        /* ── Sidebar ──────────────────────────────────────── */
-        /* --- Sidebar Width --- */
-        section[data-testid="stSidebar"] {
-            min-width: 280px !important;
-            max-width: 280px !important;
-            background: linear-gradient(180deg, #0A1628 0%, #142d4c 100%);
-        }
-
-        /* HIDE SIDEBAR BUTTON & REMOVE SIDEBAR TOP WHITESPACE */
-        [data-testid="collapsedControl"], 
-        [data-testid="stSidebarHeader"] {
-            display: none !important; /* Kills the open/close buttons and the 60px header gap */
-        }
-        
-        [data-testid="stSidebarUserContent"] {
-            padding-top: 4rem !important; /* Pulls your logo flush to the top */
-        }
-
-        section[data-testid="stSidebar"] * {color: rgba(255,255,255,0.85) !important;}
-        section[data-testid="stSidebar"] hr {border-color: rgba(255,255,255,0.15);}
-        section[data-testid="stSidebar"] .stRadio > div > label {
-            padding: 9px 14px; border-radius: 8px; margin: 1px 0;
-            font-size: 14.5px; transition: background .2s;
-        }
-        section[data-testid="stSidebar"] .stRadio > div > label:hover {
-            background: rgba(255,255,255,0.08);
-        }
-        section[data-testid="stSidebar"] .stRadio > div > label[data-checked="true"],
-        section[data-testid="stSidebar"] .stRadio > div [data-testid="stMarkdownContainer"] {
-            font-weight: 500;
-        }
-        /* --- Center the image in the sidebar --- */
-        [data-testid="stSidebar"] [data-testid="stImage"] {
+        /* Sidebar Image Centering */
+        [data-testid=stSidebar] [data-testid=stImage]{
             text-align: center;
             display: block;
             margin-left: auto;
             margin-right: auto;
-            width: 70%;
+            width: 80%;
         }
 
-        /* ── KPI Metric Cards ─────────────────────────────── */
-        .kpi-card {
-            background: #ffffff; border-radius: 12px;
-            padding: 20px 22px; text-align: center;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-            border-left: 4px solid #FF6B35;
-            transition: transform .15s, box-shadow .15s;
+        /* Expander / Details Styling */
+        details > summary {
+            font-weight: 600;
+            background-color: #f5f5f5;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
         }
-        .kpi-card:hover {transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.10);}
-        .kpi-value {font-size: 28px; font-weight: 700; color: #0A1628; margin: 4px 0;}
-        .kpi-label {font-size: 13px; color: #6c757d; text-transform: uppercase; letter-spacing: .8px;}
-        .kpi-card.green  {border-left-color: #28a745;}
-        .kpi-card.red    {border-left-color: #dc3545;}
-        .kpi-card.blue   {border-left-color: #17a2b8;}
-        .kpi-card.orange {border-left-color: #FF6B35;}
+        details > summary:hover {
+            background-color: #FAEABD !important;
+            color: black !important;
+            transform: scale(1.02);
+        }
+
+        /* Custom Button Styles */
+        .stButton > button {
+            border-radius: 8px !important;
+            border: 2px solid #144774 !important;
+            background-color: #175388 !important;
+            color: white !important;
+            transition: all 0.2s ease-in-out !important;
+        }
+        .stButton > button:hover {
+            background-color: #ecb713 !important;
+            border-color: #c49e10 !important;
+            color: white !important;
+        }
 
         /* ── Insight Cards ────────────────────────────────── */
         .insight-card {
             background: #fff; border-radius: 10px; padding: 18px 22px;
             margin: 8px 0; box-shadow: 0 1px 8px rgba(0,0,0,0.05);
-            border-left: 4px solid #17a2b8;
+            border-left: 4px solid #175388;
         }
         .insight-card .badge {
             display: inline-block; padding: 3px 10px; border-radius: 12px;
@@ -164,34 +138,7 @@ def inject_css():
         .badge-low  {background:#e8f5e9; color:#2e7d32;}
         .badge-med  {background:#fff3e0; color:#e65100;}
         .badge-high {background:#ffebee; color:#c62828;}
-        .badge-info {background:#e3f2fd; color:#1565c0;}
-
-        /* ── Page Header ──────────────────────────────────── */
-        .page-header {
-            background: linear-gradient(135deg, #0A1628, #1B3A5C);
-            color: #fff; 
-            padding: 5px 5px; 
-            border-radius: 14px;
-            margin-bottom: 24px;
-            text-align: center;
-        }
-        .page-header h2 {color: #fff !important; margin:0 0 6px 0; font-size:42px;}
-        .page-header p  {color: rgba(255,255,255,0.75); margin:0; font-size:16px;}
-
-        /* ── Chat Messages ────────────────────────────────── */
-        .stChatMessage {border-radius: 12px !important;}
-
-        /* ── Buttons ──────────────────────────────────────── */
-        .stButton > button {
-            border-radius: 8px; font-weight: 500;
-            transition: all .2s;
-        }
-        div.stButton > button:first-child {
-            background-color: #001775; color: white; border: none;
-        }
-        div.stButton > button:first-child:hover {
-            background-color: #002AD1; color: white;
-        }
+        .badge-info {background:#e3f2fd; color:#175388;}
 
         /* ── Coming‑soon Banner ───────────────────────────── */
         .coming-soon {
@@ -199,37 +146,16 @@ def inject_css():
             background: linear-gradient(135deg, #f8f9fa, #e9ecef);
             border-radius: 16px; margin: 30px 0;
         }
-        .coming-soon h2 {font-size: 36px; color: #1B3A5C;}
+        .coming-soon h2 {font-size: 36px; color: #175388;}
         .coming-soon p  {font-size: 16px; color: #6c757d;}
-
-        /* ── Sample chip / tag ────────────────────────────── */
-        .sample-chip {
-            display: inline-block; background: #f0f2f6;
-            padding: 6px 14px; border-radius: 20px; margin: 4px;
-            font-size: 13px; color: #333; cursor: pointer;
-            border: 1px solid #ddd; transition: background .15s;
-        }
-        .sample-chip:hover {background: #e2e6ea;}
-
-        /* ── Copyright ────────────────────────────────────── */
-        .copyright {
-            font-size: 11px; color: rgba(255,255,255,0.45);
-            text-align: center; padding: 12px 0 8px 0;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            margin-top: 20px;
-        }
-
+        
         /* ── Status badges for tables ─────────────────────── */
-        .status-paid   {color:#28a745; font-weight:600;}
-        .status-denied {color:#dc3545; font-weight:600;}
-        .status-pending{color:#ffc107; font-weight:600;}
-
-        /* ── Hide Streamlit branding ──────────────────────── */
-        #MainMenu {visibility: hidden;}
-        footer {visibility: hidden;}
-    </style>""",
-        unsafe_allow_html=True,
-    )
+        .status-paid   {color:#175388; font-weight:600;}
+        .status-denied {color:#ecb713; font-weight:600;}
+        .status-pending{color:#2A7B9B; font-weight:600;}
+    </style>
+    """
+    st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -239,7 +165,7 @@ def init_session_state():
     defaults = {
         "openai_api_key": os.environ.get("OPENAI_API_KEY", ""),
         "openai_api_base": os.environ.get("OPENAI_API_BASE", ""),
-        "selected_page": "📊 Dashboard",
+        "selected_page": "Dashboard",
         "vectorstore_ready": False,
         "module1_chat_history": [],
         "module2_chat_history": [],
@@ -255,7 +181,6 @@ def init_session_state():
 # UTILITY HELPERS
 # ═══════════════════════════════════════════════════════════════════════════
 def get_api_key():
-    """Return OpenAI API key from session state, secrets, or env."""
     if st.session_state.get("openai_api_key"):
         return st.session_state["openai_api_key"]
     try:
@@ -298,35 +223,59 @@ def api_key_configured():
 
 
 def render_page_header(icon, title, description):
-    st.markdown(
-        f"""<div class="page-header">
-            <h2>{icon}&nbsp; {title}</h2>
-            <p>{description}</p>
-        </div>""",
-        unsafe_allow_html=True,
-    )
+    full_title = f"{icon} {title}" if icon else title
+    banner_html = f"""
+    <style>
+        .gradient-box {{
+            padding: 25px;
+            border-radius: 15px;
+            width: 100%;
+            background: linear-gradient(135deg, #175388 0%, #2A7B9B 100%);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }}
+        .solid-text {{
+            font-size: 40px;
+            font-weight: bold;
+            color: #FFFFFF;
+            margin: 0;
+            line-height: 1.1;
+        }}
+        .subtext {{
+            font-size: 18px;
+            color: #E0F7FA;
+            margin-top: 10px;
+            font-weight: 500;
+        }}
+    </style>
+    <div class="gradient-box">
+        <div class="solid-text">{full_title}</div>
+        <div class="subtext">{description}</div>
+    </div>
+    """
+    st.markdown(banner_html, unsafe_allow_html=True)
 
 
 def render_kpi_card(label, value, color_class="orange"):
-    st.markdown(
-        f"""<div class="kpi-card {color_class}">
-            <div class="kpi-label">{label}</div>
-            <div class="kpi-value">{value}</div>
-        </div>""",
-        unsafe_allow_html=True,
-    )
+    box_css = """
+    {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        border: 1px solid #e6e6e6;
+        text-align: center;
+    }
+    """
+    safe_key = f"metric_{label.replace(' ', '_')}"
+    with stylable_container(key=safe_key, css_styles=box_css):
+        st.markdown(f"<p style='color: #175388; font-weight: bold; margin-bottom: 5px;'>{label}</p>", unsafe_allow_html=True)
+        st.markdown(f"<h2 style='color: #ecb713; margin-top: 0;'>{value}</h2>", unsafe_allow_html=True)
 
 
 def show_api_warning():
     st.warning("Please configure your OpenAI API key in **⚙️ Settings** to use this module.")
-
-
-#def load_logo_b64(path):
-#    """Return base64-encoded image if the logo file exists."""
-#    if Path(path).exists():
-#        data = Path(path).read_bytes()
-#        return base64.b64encode(data).decode()
-#    return None
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -386,13 +335,11 @@ RAG_USER_TEMPLATE = """
 
 @st.cache_resource(show_spinner=False)
 def build_vector_store(_api_key, _api_base):
-    """Load PDF, chunk, embed, and persist to ChromaDB."""
     kwargs = {"openai_api_key": _api_key, "chunk_size": 512}
     if _api_base:
         kwargs["openai_api_base"] = _api_base
     embedding_model = OpenAIEmbeddings(**kwargs)
 
-    # Check for existing vector store
     if os.path.exists(VECTOR_DB_DIR) and os.listdir(VECTOR_DB_DIR):
         return Chroma(persist_directory=VECTOR_DB_DIR, embedding_function=embedding_model)
 
@@ -435,13 +382,12 @@ def render_module_1():
     render_page_header(
         "🩺",
         "Medical Assistant AI",
-        "RAG-powered knowledge base for clinical decision support — backed by the Merck Medical Manual (4 000+ pages).",
+        "RAG-powered knowledge base for clinical decision support — backed by the Synthetic Medical Manual (4 000+ pages).",
     )
     if not api_key_configured():
         show_api_warning()
         return
 
-    # Initialize vector store
     client = get_openai_client()
     if not st.session_state.vectorstore_ready:
         if not os.path.exists(PDF_PATH):
@@ -460,35 +406,12 @@ def render_module_1():
 
     vectorstore = build_vector_store(get_api_key(), get_api_base())
 
-    # Sample questions
-    st.markdown("##### Try a sample question")
-    sample_qs = [
-        "What is the protocol for managing sepsis in a critical care unit?",
-        "What are the common symptoms for appendicitis?",
-        "What treatments are recommended for traumatic brain injury?",
-        "What are the effective treatments for alopecia areata?",
-    ]
-    cols = st.columns(2)
-    for i, q in enumerate(sample_qs):
-        if cols[i % 2].button(q, key=f"sq_{i}", width="stretch"):
-            st.session_state.module1_chat_history.append({"role": "user", "content": q})
-            with st.spinner("Searching knowledge base..."):
-                ans, srcs = get_rag_response(q, vectorstore, client)
-            st.session_state.module1_chat_history.append(
-                {"role": "assistant", "content": ans, "sources": srcs}
-            )
-            st.rerun()
-
-    st.markdown("---")
-
-    # Chat history display
     for msg in st.session_state.module1_chat_history:
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
             if msg["role"] == "assistant" and msg.get("sources"):
                 st.caption(f"📄 Source pages: {', '.join(str(s) for s in sorted(msg['sources']))}")
 
-    # Chat input
     if user_input := st.chat_input("Ask a medical question...", key="m1_input"):
         st.session_state.module1_chat_history.append({"role": "user", "content": user_input})
         with st.chat_message("user"):
@@ -519,8 +442,7 @@ def input_guard_check(user_query, llm):
 Return ONLY the number (0, 1, 2, or 3).
 
 User Query: {user_query}"""
-    #return llm.predict(prompt).strip()
-    return llm.invoke(prompt).content.strip()
+    return llm.predict(prompt).strip()
 
 
 def output_guard_check(model_output, llm):
@@ -540,8 +462,7 @@ Assistant Response:
 {model_output}
 
 Return only 'SAFE' or 'BLOCK'."""
-    #return llm.predict(prompt).strip()
-    return llm.invoke(prompt).content.strip()
+    return llm.predict(prompt).strip()
 
 
 @st.cache_resource
@@ -570,7 +491,7 @@ def render_module_2():
     render_page_header(
         "🔍",
         "Claim Audit AI",
-        "Natural-language query engine for healthcare claims auditing — with context memory and AI guardrails.",
+        "Natural-language query engine for healthcare claims auditing",
     )
     if not api_key_configured():
         show_api_warning()
@@ -578,45 +499,10 @@ def render_module_2():
 
     llm = get_langchain_llm()
 
-    # Guardrail status indicators
-    col_a, col_b, col_c = st.columns(3)
-    col_a.markdown("🟢 **Input Guardrail** — Active")
-    col_b.markdown("🟢 **Output Guardrail** — Active")
-    col_c.markdown("🟢 **Context Memory** — Active")
-
-    # Sample queries
-    st.markdown("##### Sample audit queries")
-    samples = [
-        "Which providers have the highest total claim amount?",
-        "What was the denial reason for claim CLM1043?",
-        "Which specialty has the longest average length of stay?",
-        "How many claims are flagged for coding audit?",
-    ]
-    scols = st.columns(2)
-    for i, sq in enumerate(samples):
-        if scols[i % 2].button(sq, key=f"aq_{i}", width="stretch"):
-            st.session_state.module2_chat_history.append({"role": "user", "content": sq})
-            with st.spinner("Processing audit query..."):
-                guard_res = input_guard_check(sq, llm)
-                if guard_res == "2":
-                    raw = process_audit_query(sq, st.session_state.module2_context_memory, llm)
-                    safety = output_guard_check(raw, llm)
-                    if safety == "BLOCK":
-                        raw = "I'm sorry, but I cannot provide the requested information. Your request is being forwarded to the compliance team."
-                    st.session_state.module2_context_memory += f"\nuser: {sq}\nassistant: {raw}"
-                else:
-                    raw = _guardrail_response(guard_res)
-            st.session_state.module2_chat_history.append({"role": "assistant", "content": raw})
-            st.rerun()
-
-    st.markdown("---")
-
-    # Chat display
     for msg in st.session_state.module2_chat_history:
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
 
-    # Chat input
     if user_input := st.chat_input("Ask an audit question...", key="m2_input"):
         st.session_state.module2_chat_history.append({"role": "user", "content": user_input})
         with st.chat_message("user"):
@@ -700,7 +586,6 @@ def render_module_3():
             "Paste a doctor-patient dialogue below, or select a sample conversation."
         )
 
-        # Sample selector
         sample_idx = st.selectbox(
             "Load a sample conversation",
             options=["— Select —"] + [f"Sample {i+1}" for i in range(len(test_data))],
@@ -733,7 +618,6 @@ def render_module_3():
             )
             st.markdown(summary)
 
-            # Show reference summary if a sample was selected
             if sample_idx != "— Select —":
                 idx = int(sample_idx.split(" ")[1]) - 1
                 ref = test_data.iloc[idx]["summary"]
@@ -748,7 +632,6 @@ def render_module_3():
                 unsafe_allow_html=True,
             )
 
-    # History table
     if st.session_state.module3_history:
         st.markdown("---")
         st.markdown("#### Recent Summaries")
@@ -772,13 +655,13 @@ def render_dashboard():
     # ── Row 1: KPI Cards ─────────────────────────────────────────────
     c1, c2, c3, c4 = st.columns(4)
     with c1:
-        render_kpi_card("Total Claims", f"{kpis['total_claims']}", "blue")
+        render_kpi_card("Total Claims", f"{kpis['total_claims']}")
     with c2:
-        render_kpi_card("Total Billed", f"${kpis['total_amount']:,.2f}", "orange")
+        render_kpi_card("Total Billed", f"${kpis['total_amount']:,.2f}")
     with c3:
-        render_kpi_card("Denial Rate", f"{kpis['denial_rate']:.1f}%", "red")
+        render_kpi_card("Denial Rate", f"{kpis['denial_rate']:.1f}%")
     with c4:
-        render_kpi_card("Avg Length of Stay", f"{kpis['avg_los']:.1f} days", "green")
+        render_kpi_card("Avg Length of Stay", f"{kpis['avg_los']:.1f} days")
 
     st.markdown("<br>", unsafe_allow_html=True)
 
@@ -813,7 +696,7 @@ def render_dashboard():
             y="Department",
             orientation="h",
             title="Claims by Department",
-            color_discrete_sequence=["#87C0FF"],
+            color_discrete_sequence=["#175388"],
         )
         fig2.update_layout(
             margin=dict(t=40, b=20, l=20, r=20),
@@ -863,7 +746,7 @@ def render_dashboard():
             y="provider_id",
             orientation="h",
             title="Top 10 Providers by Claim Amount",
-            color_discrete_sequence=["#FFAA8A"],
+            color_discrete_sequence=["#ecb713"],
         )
         fig4.update_layout(
             margin=dict(t=40, b=20, l=20, r=20),
@@ -876,7 +759,6 @@ def render_dashboard():
     # ── Row 4: AI-Powered Insights ───────────────────────────────────
     st.markdown("### 💡 AI-Powered Insights")
 
-    # Compute insights
     denied_df = df[df["claim_status"] == "Denied"]
     top_denial = denied_df["denial_reason"].value_counts()
     doc_incomplete = (df["documentation_complete"] == "No").mean() * 100
@@ -953,7 +835,6 @@ def render_dashboard():
     st.markdown("<br>", unsafe_allow_html=True)
     st.markdown("### 📋 Claims Overview")
 
-    # Filters
     fc1, fc2, fc3 = st.columns(3)
     with fc1:
         dept_filter = st.multiselect(
@@ -1018,7 +899,6 @@ COMING_SOON_INFO = {
         "features": ["X-ray/CT/MRI analysis", "Differential diagnosis", "DICOM integration", "Radiologist workflow support"],
     },
 }
-
 
 def render_coming_soon(module_key):
     info = COMING_SOON_INFO[module_key]
@@ -1109,38 +989,56 @@ def render_settings():
 # ═══════════════════════════════════════════════════════════════════════════
 def render_sidebar():
     with st.sidebar:
-        # ── Logo ─────────────────────────────────────────────────────
-        st.image('logo/JadeGlobal_BW.png')
-        st.markdown("<h1 style='text-align: center;'>NexAiCare</h1>", unsafe_allow_html=True)
-        st.markdown("<h4 style='text-align: center;'>Healthcare AI Platform</h4>", unsafe_allow_html=True)
-        st.markdown("---")
-
-        # ── Navigation ───────────────────────────────────────────────
-        selected = st.radio(
-            "Navigation",
-            options=list(MENU_ITEMS.keys()),
-            index=list(MENU_ITEMS.keys()).index(st.session_state.selected_page),
-            label_visibility="collapsed",
-            key="nav_radio",
+        st.image('logo/jadeglobal.png')
+        st.markdown("""
+        <div style='text-align: center; color: #175388;'>
+            <h1 style='margin-bottom: 0; padding-bottom: 0;'>NexAiCare</h1>
+            <h3 style='margin-top: 0px; padding-top: 0;'>Healthcare AI Platform</h3>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        menu_options = list(MENU_ITEMS.keys())
+        current_index = menu_options.index(st.session_state.selected_page)
+        
+        icons = [
+            'speedometer2',       # Dashboard
+            'heart-pulse',        # Medical Assistant AI
+            'search',             # Claim Audit AI
+            'journal-text',       # Consultation Notes AI
+            'shield-lock',        # PII/PHI Monitor
+            'code-square',        # Medical Coding AI
+            'clipboard2-pulse',   # Clinical Diagnostic AI
+            'gear'                # Settings
+        ]
+        
+        selected = option_menu(
+            menu_title=None,
+            options=menu_options,
+            icons=icons,
+            default_index=current_index,
+            styles={
+                "container": {"padding": "0!important", "background-color": "transparent"},
+                "icon": {"color": "white", "font-size": "16px"},
+                "nav-link": {
+                    "font-size": "16px",
+                    "text-align": "left",
+                    "margin": "5px 0",
+                    "color": "white",
+                    "border-radius": "8px",
+                    "background-color": "#175388",
+                },
+                "nav-link-selected": {"background-color": "#ecb713"},
+            }
         )
         st.session_state.selected_page = selected
-
-        # ── API status indicator ─────────────────────────────────────
-        st.markdown("---")
+        
+        st.divider()
+        st.markdown(f"**👤 Operator:** {st.secrets.get('streamlit_username', 'Admin')}")
+        
         if api_key_configured():
-            st.markdown("🟢 &nbsp; API Connected")
+            st.markdown("**Status:** :green[API Connected 🟢]")
         else:
-            st.markdown("🔴 &nbsp; API Key Required")
-
-        # ── Copyright ────────────────────────────────────────────────
-        year = datetime.now().year
-        st.markdown(
-            f"""<div class="copyright">
-                © {year} Jade Global. All rights reserved.<br>
-                NexAiCare v1.0.0
-            </div>""",
-            unsafe_allow_html=True,
-        )
+            st.markdown("**Status:** :red[API Key Required 🔴]")
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -1151,7 +1049,6 @@ def main():
     inject_css()
     render_sidebar()
 
-    # Check if vectorstore already exists on disk (auto-detect)
     if os.path.exists(VECTOR_DB_DIR) and os.listdir(VECTOR_DB_DIR):
         st.session_state.vectorstore_ready = True
 
