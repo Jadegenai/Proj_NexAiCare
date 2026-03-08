@@ -1039,7 +1039,7 @@ def render_sidebar():
         )
         st.session_state.selected_page = selected
         
-        st.markdown("---")
+        #st.markdown("---")
         if api_key_configured():
             st.markdown("🟢 &nbsp; API Connected")
         else:
