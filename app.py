@@ -943,7 +943,8 @@ def render_settings():
     # Task 3: Key is password type (hidden)
     new_key = st.text_input(
         "OpenAI API Key",
-        value=st.session_state.get("openai_api_key", ""),
+        #value=st.session_state.get("openai_api_key", ""),
+        value="******************************",
         type="password",
         placeholder="sk-...",
     )
@@ -1038,16 +1039,14 @@ def render_sidebar():
         )
         st.session_state.selected_page = selected
         
-        st.divider()
-        
-        # Task 4 & 5: Bottom Sidebar Content Update
+        st.markdown("---")
         if api_key_configured():
-            st.markdown("<p style='font-size: 11px; text-align: center; margin-bottom: 20px;'>Status: <span style='color: #28a745;'>API Connected 🟢</span></p>", unsafe_allow_html=True)
+            st.markdown("🟢 &nbsp; API Connected")
         else:
-            st.markdown("<p style='font-size: 11px; text-align: center; margin-bottom: 20px;'>Status: <span style='color: #dc3545;'>API Key Required 🔴</span></p>", unsafe_allow_html=True)
+            st.markdown("🔴 &nbsp; API Key Required")
 
         st.markdown(
-            """<div style='font-size: 10px; color: rgba(255,255,255,0.5); text-align: center; margin-top: 10px; line-height: 1.4;'>
+            """<div style='font-size: 10px; color: rgba(23, 83, 136,0.5); text-align: center; margin-top: 10px; line-height: 1.4;'>
                 © 2026 Jade Global. All rights reserved.<br>
                 NexAiCare v1.0.0
             </div>""",
