@@ -94,7 +94,7 @@ def inject_css():
             display: block;
             margin-left: auto;
             margin-right: auto;
-            width: 70%;
+            width: 50%;
             margin-bottom: 10px;
         }
 
@@ -995,9 +995,9 @@ def render_settings():
 def render_sidebar():
     with st.sidebar:
         st.image('logo/jadeglobal.png')
+        st.image('logo/NexaAiCare.png')
         st.markdown("""
         <div style='text-align: center; color: #175388;'>
-            <h2 style='margin-bottom: 0; padding-bottom: 0; font-size: 20px;'>NexAiCare</h2>
             <p style='margin-top: 2px; padding-top: 0; font-size: 13px;'>Healthcare AI Platform</p>
         </div>
         """, unsafe_allow_html=True)
