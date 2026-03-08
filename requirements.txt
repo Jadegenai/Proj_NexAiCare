@@ -4,7 +4,9 @@
 # ╚══════════════════════════════════════════════════════════════╝
 
 # Core Framework
-streamlit>=1.32.0
+streamlit
+streamlit-extras
+streamlit_option_menu
 
 # OpenAI
 openai>=1.30.0
