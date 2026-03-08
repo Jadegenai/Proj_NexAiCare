@@ -94,7 +94,8 @@ def inject_css():
             display: block;
             margin-left: auto;
             margin-right: auto;
-            width: 80%;
+            width: 70%;
+            margin-bottom: 10px;
         }
 
         /* Expander / Details Styling */
@@ -118,6 +119,7 @@ def inject_css():
             background-color: #175388 !important;
             color: white !important;
             transition: all 0.2s ease-in-out !important;
+            padding: 0.4rem 1rem !important;
         }
         .stButton > button:hover {
             background-color: #ecb713 !important;
@@ -142,12 +144,12 @@ def inject_css():
 
         /* ── Coming‑soon Banner ───────────────────────────── */
         .coming-soon {
-            text-align: center; padding: 80px 40px;
+            text-align: center; padding: 60px 40px;
             background: linear-gradient(135deg, #f8f9fa, #e9ecef);
             border-radius: 16px; margin: 30px 0;
         }
-        .coming-soon h2 {font-size: 36px; color: #175388;}
-        .coming-soon p  {font-size: 16px; color: #6c757d;}
+        .coming-soon h2 {font-size: 30px; color: #175388;}
+        .coming-soon p  {font-size: 14px; color: #6c757d;}
         
         /* ── Status badges for tables ─────────────────────── */
         .status-paid   {color:#175388; font-weight:600;}
@@ -222,30 +224,31 @@ def api_key_configured():
     return bool(get_api_key())
 
 
+# Task 1: Professional, Smaller Header
 def render_page_header(icon, title, description):
     full_title = f"{icon} {title}" if icon else title
     banner_html = f"""
     <style>
         .gradient-box {{
-            padding: 25px;
-            border-radius: 15px;
+            padding: 12px 25px;
+            border-radius: 12px;
             width: 100%;
             background: linear-gradient(135deg, #175388 0%, #2A7B9B 100%);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            margin-bottom: 1.2rem;
             text-align: center;
         }}
         .solid-text {{
-            font-size: 40px;
+            font-size: 26px;
             font-weight: bold;
             color: #FFFFFF;
             margin: 0;
-            line-height: 1.1;
+            line-height: 1.2;
         }}
         .subtext {{
-            font-size: 18px;
+            font-size: 14px;
             color: #E0F7FA;
-            margin-top: 10px;
+            margin-top: 4px;
             font-weight: 500;
         }}
     </style>
@@ -261,7 +264,7 @@ def render_kpi_card(label, value, color_class="orange"):
     box_css = """
     {
         background-color: #ffffff;
-        padding: 20px;
+        padding: 15px;
         border-radius: 12px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         border: 1px solid #e6e6e6;
@@ -270,8 +273,8 @@ def render_kpi_card(label, value, color_class="orange"):
     """
     safe_key = f"metric_{label.replace(' ', '_')}"
     with stylable_container(key=safe_key, css_styles=box_css):
-        st.markdown(f"<p style='color: #175388; font-weight: bold; margin-bottom: 5px;'>{label}</p>", unsafe_allow_html=True)
-        st.markdown(f"<h2 style='color: #ecb713; margin-top: 0;'>{value}</h2>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color: #175388; font-weight: bold; font-size: 13px; margin-bottom: 5px;'>{label}</p>", unsafe_allow_html=True)
+        st.markdown(f"<h2 style='color: #ecb713; font-size: 24px; margin-top: 0;'>{value}</h2>", unsafe_allow_html=True)
 
 
 def show_api_warning():
@@ -683,7 +686,7 @@ def render_dashboard():
         fig1.update_layout(
             margin=dict(t=40, b=20, l=20, r=20),
             legend=dict(orientation="h", y=-0.1),
-            font=dict(size=13),
+            font=dict(size=12),
         )
         st.plotly_chart(fig1, width="stretch")
 
@@ -702,7 +705,7 @@ def render_dashboard():
             margin=dict(t=40, b=20, l=20, r=20),
             yaxis_title="",
             xaxis_title="Number of Claims",
-            font=dict(size=13),
+            font=dict(size=12),
         )
         st.plotly_chart(fig2, width="stretch")
 
@@ -729,7 +732,7 @@ def render_dashboard():
             xaxis_title="",
             yaxis_title="Amount ($)",
             legend_title="Status",
-            font=dict(size=13),
+            font=dict(size=12),
         )
         st.plotly_chart(fig3, width="stretch")
 
@@ -752,7 +755,7 @@ def render_dashboard():
             margin=dict(t=40, b=20, l=20, r=20),
             yaxis_title="",
             xaxis_title="Total Amount ($)",
-            font=dict(size=13),
+            font=dict(size=12),
         )
         st.plotly_chart(fig4, width="stretch")
 
@@ -870,7 +873,7 @@ def render_dashboard():
     st.dataframe(
         filtered[display_cols].style.format({"claim_amount": "${:,.2f}"}),
         width="stretch",
-        height=400,
+        height=350,
         hide_index=True,
     )
     st.caption(f"Showing {len(filtered)} of {len(df)} claims")
@@ -937,6 +940,7 @@ def render_settings():
         "Keys are stored in session memory only and never persisted to disk."
     )
 
+    # Task 3: Key is password type (hidden)
     new_key = st.text_input(
         "OpenAI API Key",
         value=st.session_state.get("openai_api_key", ""),
@@ -992,8 +996,8 @@ def render_sidebar():
         st.image('logo/jadeglobal.png')
         st.markdown("""
         <div style='text-align: center; color: #175388;'>
-            <h1 style='margin-bottom: 0; padding-bottom: 0;'>NexAiCare</h1>
-            <h3 style='margin-top: 0px; padding-top: 0;'>Healthcare AI Platform</h3>
+            <h2 style='margin-bottom: 0; padding-bottom: 0; font-size: 20px;'>NexAiCare</h2>
+            <p style='margin-top: 2px; padding-top: 0; font-size: 13px;'>Healthcare AI Platform</p>
         </div>
         """, unsafe_allow_html=True)
         
@@ -1011,6 +1015,7 @@ def render_sidebar():
             'gear'                # Settings
         ]
         
+        # Task 2: Smaller Sidebar Navigation
         selected = option_menu(
             menu_title=None,
             options=menu_options,
@@ -1018,11 +1023,12 @@ def render_sidebar():
             default_index=current_index,
             styles={
                 "container": {"padding": "0!important", "background-color": "transparent"},
-                "icon": {"color": "white", "font-size": "16px"},
+                "icon": {"color": "white", "font-size": "14px"},
                 "nav-link": {
-                    "font-size": "16px",
+                    "font-size": "13px",
                     "text-align": "left",
-                    "margin": "5px 0",
+                    "margin": "2px 0",
+                    "padding": "8px 12px",
                     "color": "white",
                     "border-radius": "8px",
                     "background-color": "#175388",
@@ -1033,12 +1039,20 @@ def render_sidebar():
         st.session_state.selected_page = selected
         
         st.divider()
-        st.markdown(f"**👤 Operator:** {st.secrets.get('streamlit_username', 'Admin')}")
         
+        # Task 4 & 5: Bottom Sidebar Content Update
         if api_key_configured():
-            st.markdown("**Status:** :green[API Connected 🟢]")
+            st.markdown("<p style='font-size: 11px; text-align: center; margin-bottom: 20px;'>Status: <span style='color: #28a745;'>API Connected 🟢</span></p>", unsafe_allow_html=True)
         else:
-            st.markdown("**Status:** :red[API Key Required 🔴]")
+            st.markdown("<p style='font-size: 11px; text-align: center; margin-bottom: 20px;'>Status: <span style='color: #dc3545;'>API Key Required 🔴</span></p>", unsafe_allow_html=True)
+
+        st.markdown(
+            """<div style='font-size: 10px; color: rgba(255,255,255,0.5); text-align: center; margin-top: 10px; line-height: 1.4;'>
+                © 2026 Jade Global. All rights reserved.<br>
+                NexAiCare v1.0.0
+            </div>""",
+            unsafe_allow_html=True,
+        )
 
 
 # ═══════════════════════════════════════════════════════════════════════════
