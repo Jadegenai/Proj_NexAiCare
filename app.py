@@ -445,7 +445,8 @@ def input_guard_check(user_query, llm):
 Return ONLY the number (0, 1, 2, or 3).
 
 User Query: {user_query}"""
-    return llm.predict(prompt).strip()
+    #return llm.predict(prompt).strip()
+    return llm.invoke(prompt).content.strip()
 
 
 def output_guard_check(model_output, llm):
@@ -465,7 +466,8 @@ Assistant Response:
 {model_output}
 
 Return only 'SAFE' or 'BLOCK'."""
-    return llm.predict(prompt).strip()
+    #return llm.predict(prompt).strip()
+    return llm.invoke(prompt).content.strip()
 
 
 @st.cache_resource
